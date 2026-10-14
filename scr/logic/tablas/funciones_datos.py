@@ -1,8 +1,8 @@
 import ibm_db
 import pandas as pd
 from pathlib import Path
-from scr.logica.tablas.def_tablas import TABLAS
-from scr.database.conectar_bd import conectar_bd
+from scr.logic.tablas.def_tablas import TABLAS
+from scr.bd.conectar_bd import conectar_bd
 
 
 def leer_csv(nombre_archivo, tabla):

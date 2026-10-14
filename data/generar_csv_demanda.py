@@ -1,7 +1,7 @@
 import pandas as pd
 
 # Archivos
-archivo_entrada = "data/demanda-diaria-crtm.xlsx"
+archivo_entrada = "data/demanda_diaria_crtm.xlsx"
 archivo_salida = "data/demanda.csv"
 
 # Leer Excel
@@ -12,11 +12,11 @@ demanda = pd.read_excel(archivo_entrada)
 # Se convierte el Excel a CSV.
 # -------------------------------------
 
-# Convertir fechas al formato YYYY-MM-DD
+# Convertir fechas al formato DD-MM-YYYY
 demanda["fecha"] = pd.to_datetime(
     demanda["fecha"],
     dayfirst=True
-).dt.strftime("%Y-%m-%d")
+).dt.strftime("%d-%m-%Y")
 
 # Convertir a números enteros
 columnas_numericas = [

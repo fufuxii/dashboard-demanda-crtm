@@ -2,6 +2,7 @@ import os
 import ibm_db
 from dotenv import load_dotenv
 
+
 load_dotenv()
 # Extraer datos de conexión
 NAME = os.getenv("DB_NAME")
@@ -10,6 +11,7 @@ PORT = os.getenv("DB_PORT")
 PROTOCOL = os.getenv("DB_PROTOCOL")
 USER = os.getenv("DB_UID")
 PASSWORD = os.getenv("DB_PASSWORD")
+
 
 def conectar_bd():
     print("Conectando a la bd...")

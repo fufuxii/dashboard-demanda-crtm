@@ -1,7 +1,7 @@
 import pandas as pd
 
 # Archivos
-archivo_festivos = "data/calendario-festivos-23-26.xlsx"
+archivo_festivos = "data/calendario_festivos_23_26.xlsx"
 archivo_salida = "data/calendario.csv"
 
 # fechas

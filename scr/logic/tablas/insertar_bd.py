@@ -1,4 +1,4 @@
-from scr.logic.tablas.funciones_datos import insertar_datos_en_db2
+from scr.logic.tablas.funciones_bd import insertar_datos_en_db2
 
 
 def insertar_calendario():

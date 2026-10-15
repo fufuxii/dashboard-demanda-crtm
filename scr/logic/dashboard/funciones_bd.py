@@ -3,7 +3,7 @@ import ibm_db
 from scr.bd.conectar_bd import conectar_bd
 
 
-def obtener_datos(tabla):
+def obtener_datos_de_db2(tabla):
     """Obtiene los datos de demanda desde DB2."""
 
     conn = conectar_bd()

@@ -24,7 +24,7 @@ def obtener_datos_de_db2(tabla):
             filas.append(fila)
             fila = ibm_db.fetch_assoc(resultado)
 
-        # Convertir los resultados a dataFrame
+        # Convertir los resultados a dataframe
         df = pd.DataFrame(filas)
 
         return df

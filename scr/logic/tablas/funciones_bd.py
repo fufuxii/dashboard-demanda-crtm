@@ -1,7 +1,7 @@
 import ibm_db
 import pandas as pd
 from pathlib import Path
-from scr.logic.tablas.def_tablas import TABLAS
+from scr.logic.tablas.variables import TABLAS
 from scr.bd.conectar_bd import conectar_bd
 
 

@@ -1,6 +1,6 @@
 import streamlit as st
 from scr.logic.dashboard.panel import mostrar_panel
-from scr.logic.historial.historial import guardar_historico
+from scr.logic.snapshots.historial import guardar_historico
 
 
 @st.cache_resource

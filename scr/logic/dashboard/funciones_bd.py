@@ -1,5 +1,4 @@
-import pandas as pd
-import ibm_db
+import ibm_db, pandas as pd
 from scr.bd.conectar_bd import conectar_bd
 
 

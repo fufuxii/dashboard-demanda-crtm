@@ -1,6 +1,5 @@
 import streamlit as st
 
-
 FONDO = "#FFFFFF"
 FONDO_SECUNDARIO = "#F4F8FD"
 BORDE = "#CFDBEC"

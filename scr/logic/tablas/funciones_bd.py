@@ -1,5 +1,4 @@
-import ibm_db
-import pandas as pd
+import ibm_db, pandas as pd
 from pathlib import Path
 from scr.logic.tablas.variables import TABLAS
 from scr.bd.conectar_bd import conectar_bd

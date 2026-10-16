@@ -1,13 +1,13 @@
 import plotly.express as px
-from scr.logic.dashboard.variables import TRANSPORTES, MESES
 from scr.logic.dashboard.estilos import (
     COLORES_TRANSPORTE,
     NARANJA_OSCURO,
     ROJO_OSCURO,
     aplicar_estilo_grafico,
 )
-
-ALTURA_GRAFICO = 320
+from scr.logic.dashboard.variables import (
+    TRANSPORTES, MESES, ALTURA_GRAFICO
+)
 
 
 def obtener_color_transporte(transporte="TODOS"):

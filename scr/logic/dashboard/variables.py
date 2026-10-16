@@ -1,3 +1,16 @@
+ALTURA_GRAFICO = 320
+
+VISTAS = ["Global", "Detalle mensual"]
+
+TIPOS_GRAFICO = ["Barras", "Líneas"]
+
+TIPOS_DIA = {
+    "TODOS": "Todos los días",
+    "FESTIVOS": "Festivos",
+    "FINES_SEMANA": "Fines de semana",
+    "LABORABLES": "Laborables no festivos",
+}
+
 TRANSPORTES = {
     "TODOS": "Todos los transportes",
     "METRO": "Metro",

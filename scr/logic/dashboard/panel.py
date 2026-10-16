@@ -1,5 +1,4 @@
 import streamlit as st
-from scr.logic.dashboard.variables import MESES, TRANSPORTES
 from scr.logic.dashboard.funciones_bd import obtener_datos_de_db2
 from scr.logic.dashboard.estilos import aplicar_estilo_interfaz
 from scr.logic.dashboard.metricas import (
@@ -14,17 +13,9 @@ from scr.logic.dashboard.elementos import (
     crear_grafico_demanda_diaria,
     crear_grafico_demanda_por_transporte,
 )
-
-
-TIPOS_DIA = {
-    "TODOS": "Todos los días",
-    "FESTIVOS": "Festivos",
-    "FINES_SEMANA": "Fines de semana",
-    "LABORABLES": "Laborables no festivos",
-}
-
-VISTAS = ["Global", "Detalle mensual"]
-TIPOS_GRAFICO = ["Barras", "Líneas"]
+from scr.logic.dashboard.variables import (
+    MESES, TRANSPORTES, TIPOS_DIA, VISTAS, TIPOS_GRAFICO
+)
 
 
 def configurar_pagina():

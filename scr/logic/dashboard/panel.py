@@ -47,8 +47,7 @@ def mostrar_cabecera():
         <div class="crtm-banner">
             <h1>Demanda del transporte público de Madrid</h1>
             <p>
-                Análisis de la demanda por transporte,
-                evolución mensual y tipo de día
+                Análisis de la demanda por transporte de cada año (2023-2026).
             </p>
         </div>
         """,
@@ -321,7 +320,7 @@ def mostrar_panel():
         df = cargar_datos()
 
         if df is None:
-            st.warning("No hay datos disponibles en DB2.")
+            st.warning("No hay datos disponibles en la base de datos.")
             return
 
         filtros = mostrar_filtros(df)

@@ -237,8 +237,8 @@ ESTILOS_CONTROLES = """
         color: var(--texto) !important;
     }
 
-    li[role="option"]:hover,
-    div[role="option"]:hover {
+    li[role="option"] > div:hover,
+    div[role="option"] > div:hover {
         background: var(--control-claro) !important;
     }
 

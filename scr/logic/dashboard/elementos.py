@@ -34,9 +34,7 @@ def crear_figura(parametros, tipo_grafico, color):
     return fig
 
 
-def crear_grafico_demanda_mensual(
-    df_mensual, anio, transporte="TODOS", tipo_grafico="Barras"
-):
+def crear_grafico_demanda_mensual(df_mensual, anio, transporte="TODOS", tipo_grafico="Barras"):
     '''Muestra los viajes acumulados de cada mes.'''
 
     parametros = {
@@ -91,9 +89,7 @@ def crear_grafico_picos_mensuales(df_picos, anio):
     return aplicar_estilo_grafico(fig)
 
 
-def crear_grafico_demanda_diaria(
-    df_diaria, anio, mes, transporte, tipo_grafico
-):
+def crear_grafico_demanda_diaria(df_diaria, anio, mes, transporte, tipo_grafico):
     '''Muestra los viajes registrados cada día del mes.'''
 
     titulo = (

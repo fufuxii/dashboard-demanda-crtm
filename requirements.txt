@@ -20,6 +20,7 @@ openpyxl==3.1.5
 packaging==26.3
 pandas==3.0.6
 pillow==12.3.0
+plotly==7.1.0
 protobuf==7.36.2
 pyarrow==25.0.1
 pydeck==0.9.3

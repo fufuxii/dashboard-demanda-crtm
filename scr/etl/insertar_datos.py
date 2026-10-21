@@ -1,6 +1,6 @@
 import ibm_db, pandas as pd
 from pathlib import Path
-from scr.logic.tablas.variables import TABLAS
+from scr.etl.def_tablas import TABLAS
 from scr.bd.conectar_bd import conectar_bd
 
 
@@ -120,3 +120,10 @@ def insertar_datos_en_db2(nombre_archivo, nombre_tabla):
         # Cerrar conexión tanto si hay error como si no
         if conn is not None: 
             ibm_db.close(conn)
+
+
+# -------------------------------------
+# INSERTAR DATOS EN DB2
+# -------------------------------------
+#insertar_datos_en_db2("calendario.csv", "CALENDARIO")
+#insertar_datos_en_db2("demanda.csv", "DEMANDA")

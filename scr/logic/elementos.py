@@ -1,10 +1,10 @@
 import plotly.express as px
-from scr.logic.dashboard.estilos import (
+from scr.logic.estilos import (
     COLORES_TRANSPORTE,
     ROJO_OSCURO,
     aplicar_estilo_grafico,
 )
-from scr.logic.dashboard.variables import (
+from scr.logic.variables import (
     TRANSPORTES, MESES, ALTURA_GRAFICO
 )
 

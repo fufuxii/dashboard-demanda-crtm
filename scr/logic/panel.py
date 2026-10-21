@@ -1,25 +1,55 @@
-import pandas as pd
-import streamlit as st
-from scr.logic.dashboard.funciones_bd import obtener_datos_de_db2
-from scr.logic.dashboard.estilos import aplicar_estilo_interfaz
-from scr.logic.snapshots.generar_historial import guardar_historico
-from scr.logic.snapshots.consultar_historial import cargar_historico
-from scr.logic.dashboard.metricas import (
+import ibm_db, pandas as pd, streamlit as st
+from scr.bd.conectar_bd import conectar_bd
+from scr.logic.historial import cargar_historico, guardar_historico
+from scr.logic.estilos import aplicar_estilo_interfaz
+from scr.logic.metricas import (
     preparar_datos,
     calcular_demanda_global,
     calcular_demanda_por_mes,
     calcular_demanda_diaria,
     calcular_demanda_por_transporte,
 )
-from scr.logic.dashboard.elementos import (
+from scr.logic.elementos import (
     crear_grafico_demanda_mensual,
     crear_grafico_demanda_diaria,
     crear_grafico_demanda_por_transporte,
 )
-from scr.logic.dashboard.variables import (
+from scr.logic.variables import (
     MESES, TRANSPORTES, TIPOS_DIA, VISTAS, 
     TIPOS_GRAFICO, GENERACIONES_RECIENTES,
 )
+
+
+def obtener_datos_de_db2(tabla):
+    """Obtiene los datos de demanda desde DB2."""
+
+    conn = conectar_bd()
+
+    try:
+        consulta = f"""
+            SELECT *
+            FROM {tabla}
+            ORDER BY FECHA
+        """
+        
+        resultado = ibm_db.exec_immediate(conn, consulta)
+
+        # Recuperar todas las filas y juntarlas
+        filas = []
+        fila = ibm_db.fetch_assoc(resultado)
+        while fila:
+            filas.append(fila)
+            fila = ibm_db.fetch_assoc(resultado)
+
+        # Convertir los resultados a dataframe
+        df = pd.DataFrame(filas)
+
+        return df
+
+    finally:
+        # Cerrar conexión tanto si hay error como si no
+        if conn is not None:
+            ibm_db.close(conn)
 
 
 def configurar_pagina():

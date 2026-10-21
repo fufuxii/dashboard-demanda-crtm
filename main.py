@@ -1,3 +1,3 @@
-from scr.logic.dashboard.panel import mostrar_panel
+from scr.logic.panel import mostrar_panel
 
 mostrar_panel()

@@ -1,6 +1,11 @@
+LRECL = 200
+
 ALTURA_GRAFICO = 320
+
 GENERACIONES_RECIENTES = 5
+
 VISTAS = ["Global", "Detalle mensual"]
+
 TIPOS_GRAFICO = ["Barras", "Líneas"]
 
 TIPOS_DIA = {
@@ -32,3 +37,14 @@ MESES = {
     11: "Noviembre",
     12: "Diciembre",
 }
+
+
+SQL_QUERY = """
+SELECT 'DEMANDA' AS TABLA, COUNT(*) AS NUM_DIAS,
+       MIN(FECHA) AS FECHA_MIN, MAX(FECHA) AS FECHA_MAX
+FROM DEMANDA
+UNION ALL
+SELECT 'CALENDARIO', COUNT(*),
+       MIN(FECHA), MAX(FECHA)
+FROM CALENDARIO
+"""

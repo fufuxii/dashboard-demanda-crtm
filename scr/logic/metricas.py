@@ -1,5 +1,5 @@
 import pandas as pd
-from scr.logic.dashboard.variables import TRANSPORTES
+from scr.logic.variables import TRANSPORTES
 
 
 def preparar_datos(df_demanda, df_calendario):

@@ -15,23 +15,12 @@ ACENTO = "#12949F"
 ACENTO_CLARO = "#CDEFF2"
 
 ROJO_OSCURO = "#D8403F"
-ROJO = "#EE6A5B"
-ROJO_CLARO = "#FDE0DC"
-
 NARANJA = "#F28C28"
-NARANJA_CLARO = "#FFE9D0"
-
 LAVANDA = "#7C5CE0"
-LAVANDA_CLARO = "#E6E0FB"
-
 AZUL_PASTEL = "#2F80ED"
 AZUL_CLARO = "#DCEBFF"
-
 VERDE_PASTEL = "#16A37F"
-VERDE_CLARO = "#D3F3E8"
-
 AMARILLO_PASTEL = "#E8B100"
-GRIS_PASTEL = "#9AA3B5"
 
 COLORES_TRANSPORTE = {
     "METRO": ROJO_OSCURO,
@@ -55,8 +44,7 @@ ESTILOS_BASE = """
     body,
     [data-testid="stApp"],
     [data-testid="stAppViewContainer"],
-    [data-testid="stMain"],
-    [data-testid="stHeader"] {
+    [data-testid="stMain"] {
         font-family: "Montserrat", sans-serif !important;
         background: var(--fondo) !important;
         color: var(--texto) !important;
@@ -67,24 +55,13 @@ ESTILOS_BASE = """
     }
 
     [data-testid="stHeader"] {
-       display: none;
+        display: none;
     }
 
     [data-testid="stMainBlockContainer"] {
-       max-width: 1400px;
-       margin: auto;
-       padding: 0.8rem 0.8rem 0.8rem;
-    }
-
-    h1, h2, h3 {
-        color: var(--titulo) !important;
-        font-family: "Montserrat", sans-serif !important;
-    }
-
-    h2, h3 {
-        font-weight: 700 !important;
-        font-size: 1.25rem !important;
-        margin-top: 0.75rem !important;
+        max-width: 1400px;
+        margin: auto;
+        padding: 0.8rem;
     }
 
     p, label {
@@ -94,11 +71,6 @@ ESTILOS_BASE = """
 
     [data-testid="stCaptionContainer"] {
         color: var(--texto-secundario) !important;
-    }
-
-    hr {
-        border-color: var(--borde) !important;
-        margin: 1.25rem 0 !important;
     }
 """
 
@@ -113,6 +85,7 @@ ESTILOS_CABECERA = """
 
     .crtm-banner h1 {
         color: #FFFFFF !important;
+        font-family: "Montserrat", sans-serif !important;
         font-size: 1.6rem !important;
         font-weight: 800 !important;
         line-height: 1.3 !important;
@@ -199,36 +172,19 @@ ESTILOS_CONTROLES = """
         box-shadow: 0 0 0 1px var(--control) !important;
     }
 
-    [data-testid="stTextInput"] input,
-    [data-testid="stNumberInput"] input,
-    textarea {
-        color: var(--texto) !important;
-        border-radius: 8px !important;
-    }
-
-    [data-testid="stTextInput"] input:focus,
-    [data-testid="stNumberInput"] input:focus,
-    textarea:focus {
-        border-color: var(--control) !important;
-        box-shadow: 0 0 0 1px var(--control) !important;
-    }
-
-    .stButton > button,
-    [data-testid="stDownloadButton"] > button {
+    .stButton > button {
         background: var(--control) !important;
         border: 1px solid var(--control) !important;
         border-radius: 8px !important;
         font-family: "Montserrat", sans-serif !important;
     }
 
-    .stButton > button:hover,
-    [data-testid="stDownloadButton"] > button:hover {
+    .stButton > button:hover {
         background: var(--titulo) !important;
         border-color: var(--titulo) !important;
     }
 
-    .stButton > button p,
-    [data-testid="stDownloadButton"] > button p {
+    .stButton > button p {
         color: #FFFFFF !important;
     }
 """
@@ -300,33 +256,31 @@ ESTILOS_RESULTADOS = """
         overflow: hidden;
     }
 
-    [data-testid="stDataFrame"],
-    [data-testid="stTable"] {
+    [data-testid="stDataFrame"] {
         border: 1px solid var(--borde) !important;
         border-radius: 10px !important;
         overflow: hidden;
     }
 """
 
-
 ESTILOS_PESTANAS = """
-       button[data-baseweb="tab"] p {
-           color: var(--texto-secundario) !important;
-           font-weight: 600 !important;
-       }
+    button[data-baseweb="tab"] p {
+        color: var(--texto-secundario) !important;
+        font-weight: 600 !important;
+    }
 
-       button[data-baseweb="tab"][aria-selected="true"] p {
-           color: var(--titulo) !important;
-       }
+    button[data-baseweb="tab"][aria-selected="true"] p {
+        color: var(--titulo) !important;
+    }
 
-       [data-baseweb="tab-highlight"] {
-           background-color: var(--rosa) !important;
-       }
+    [data-baseweb="tab-highlight"] {
+        background-color: var(--acento) !important;
+    }
 
-       [data-baseweb="tab-border"] {
-           background-color: var(--borde) !important;
-       }
-   """
+    [data-baseweb="tab-border"] {
+        background-color: var(--borde) !important;
+    }
+"""
 
 
 def aplicar_estilo_grafico(fig):

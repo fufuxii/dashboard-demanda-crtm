@@ -18,8 +18,10 @@ def obtener_color_transporte(transporte="TODOS"):
     return COLORES_TRANSPORTE.get(transporte, ROJO_OSCURO)
 
 
-def crear_figura(parametros, tipo_grafico, color):
+def crear_figura(parametros, tipo_grafico, transporte, hover):
     '''Crea un gráfico de barras o de líneas con un único color.'''
+
+    color = obtener_color_transporte(transporte)
 
     if tipo_grafico == "Líneas":
         fig = px.line(**parametros, markers=True)
@@ -29,6 +31,9 @@ def crear_figura(parametros, tipo_grafico, color):
         )
     else:
         fig = px.bar(**parametros, color_discrete_sequence=[color])
+
+    fig.update_traces(hovertemplate=hover)
+    fig.update_layout(height=ALTURA_GRAFICO)
 
     return fig
 
@@ -45,18 +50,10 @@ def crear_grafico_demanda_mensual(df_mensual, anio, transporte="TODOS", tipo_gra
         "category_orders": {"MES_NOMBRE": list(MESES.values())},
     }
 
-    color = obtener_color_transporte(transporte)
-    fig = crear_figura(parametros, tipo_grafico, color)
+    hover = "%{x}<br>%{y:,.0f} viajes<extra></extra>"
+    fig = crear_figura(parametros, tipo_grafico, transporte, hover)
 
-    fig.update_traces(
-        hovertemplate="%{x}<br>%{y:,.0f} viajes<extra></extra>"
-    )
-
-    fig.update_layout(
-        xaxis_title="Mes",
-        yaxis_title="Viajes acumulados",
-        height=ALTURA_GRAFICO,
-    )
+    fig.update_layout(xaxis_title="Mes", yaxis_title="Viajes acumulados")
 
     return aplicar_estilo_grafico(fig)
 
@@ -77,19 +74,10 @@ def crear_grafico_demanda_diaria(df_diaria, anio, mes, transporte, tipo_grafico)
         "labels": {"FECHA": "Día", "VIAJES": "Viajes"},
     }
 
-    color = obtener_color_transporte(transporte)
-    fig = crear_figura(parametros, tipo_grafico, color)
+    hover = "%{x|%d/%m/%Y}<br>%{y:,.0f} viajes<extra></extra>"
+    fig = crear_figura(parametros, tipo_grafico, transporte, hover)
 
-    fig.update_traces(
-        hovertemplate="%{x|%d/%m/%Y}<br>%{y:,.0f} viajes<extra></extra>"
-    )
-
-    fig.update_layout(
-        xaxis_title="Día del mes",
-        yaxis_title="Número de viajes",
-        height=ALTURA_GRAFICO,
-    )
-
+    fig.update_layout(xaxis_title="Día del mes", yaxis_title="Número de viajes")
     fig.update_xaxes(tickformat="%d", dtick="D1")
 
     return aplicar_estilo_grafico(fig)
@@ -137,6 +125,7 @@ def crear_grafico_demanda_por_transporte(df_transporte, anio, mes=None):
 
     fig = aplicar_estilo_grafico(fig)
 
+    # El rango extra deja sitio al texto que va fuera de la barra.
     fig.update_xaxes(visible=False, range=[0, datos["VIAJES"].max() * 1.5])
 
     return fig

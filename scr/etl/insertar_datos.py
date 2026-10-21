@@ -1,7 +1,7 @@
 import ibm_db, pandas as pd
 from pathlib import Path
 from scr.etl.def_tablas import TABLAS
-from scr.bd.conectar_bd import conectar_bd
+from scr.bd.conexion import conectar_bd
 
 
 def leer_csv(nombre_archivo, tabla):

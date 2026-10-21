@@ -23,6 +23,8 @@ def preparar_datos(df_demanda, df_calendario):
 
     calendario = calendario[columnas_calendario]
 
+    # validate evita duplicar filas de demanda si el calendario
+    # tuviera una fecha repetida.
     df = demanda.merge(
         calendario,
         on="FECHA",
@@ -36,16 +38,16 @@ def preparar_datos(df_demanda, df_calendario):
 def filtrar_por_anio(df, anio):
     '''Filtra los registros de un año concreto.'''
 
-    return df[df["FECHA"].dt.year == anio].copy()
+    return df[df["FECHA"].dt.year == anio]
 
 
 def filtrar_por_mes(df, mes=None):
     '''Filtra un mes y, si mes es None, conserva todos los meses.'''
 
     if mes is None:
-        return df.copy()
+        return df
 
-    return df[df["FECHA"].dt.month == mes].copy()
+    return df[df["FECHA"].dt.month == mes]
 
 
 def filtrar_por_tipo_dia(df, tipo_dia="TODOS"):
@@ -54,19 +56,20 @@ def filtrar_por_tipo_dia(df, tipo_dia="TODOS"):
     tipo_dia = tipo_dia.upper()
 
     if tipo_dia == "TODOS":
-        return df.copy()
+        return df
 
     if tipo_dia == "FESTIVOS":
-        return df[df["ES_FESTIVO"] == "S"].copy()
+        return df[df["ES_FESTIVO"] == "S"]
 
     if tipo_dia == "FINES_SEMANA":
-        return df[df["ES_FIN_DE_SEMANA"] == "S"].copy()
+        return df[df["ES_FIN_DE_SEMANA"] == "S"]
 
+    # Laborable: ni fin de semana ni festivo.
     if tipo_dia == "LABORABLES":
         return df[
             (df["ES_FIN_DE_SEMANA"] == "N")
             & (df["ES_FESTIVO"] == "N")
-        ].copy()
+        ]
 
     raise ValueError(f"Tipo de día no válido: {tipo_dia}")
 
@@ -76,6 +79,7 @@ def obtener_transporte(transporte="TODOS"):
 
     transporte = transporte.upper()
 
+    # La columna TOTAL ya suma todos los transportes.
     if transporte == "TODOS":
         return "TOTAL"
 
@@ -95,7 +99,9 @@ def aplicar_filtros(df, anio, mes=None, tipo_dia="TODOS"):
     return resultado
 
 
-def calcular_demanda_global(df, anio, mes=None, transporte="TODOS", tipo_dia="TODOS"):
+def calcular_demanda_global(
+    df, anio, mes=None, transporte="TODOS", tipo_dia="TODOS"
+):
     '''Calcula indicadores generales del periodo seleccionado.'''
 
     datos = aplicar_filtros(df, anio, mes, tipo_dia)
@@ -109,6 +115,7 @@ def calcular_demanda_global(df, anio, mes=None, transporte="TODOS", tipo_dia="TO
             "fecha_pico": None,
         }
 
+    # idxmax localiza la fila del día con más viajes (el pico).
     idx_maximo = datos[columna].idxmax()
 
     return {
@@ -125,6 +132,7 @@ def calcular_demanda_por_mes(df, anio, transporte="TODOS", tipo_dia="TODOS"):
     datos = aplicar_filtros(df, anio, tipo_dia=tipo_dia)
     columna = obtener_transporte(transporte)
 
+    # Se suman los viajes de todos los días de cada mes.
     resultado = (
         datos.groupby(["MES_NUM", "MES_NOMBRE"], as_index=False)[columna]
         .sum()
@@ -140,23 +148,19 @@ def calcular_demanda_por_transporte(df, anio, mes=None, tipo_dia="TODOS"):
 
     datos = aplicar_filtros(df, anio, mes, tipo_dia)
 
-    transportes = [
-        transporte for transporte in TRANSPORTES
-        if transporte not in ("TODOS", "TOTAL")
-    ]
+    # TODOS solo sirve para filtrar: no es una columna de demanda.
+    transportes = [t for t in TRANSPORTES if t != "TODOS"]
+    viajes = datos[transportes].sum()
 
-    resultado = pd.DataFrame({
-        "TRANSPORTE": transportes,
-        "VIAJES": [
-            datos[transporte].sum()
-            for transporte in transportes
-        ],
+    return pd.DataFrame({
+        "TRANSPORTE": viajes.index,
+        "VIAJES": viajes.values,
     })
 
-    return resultado
 
-
-def calcular_demanda_diaria(df, anio, mes=None, transporte="TODOS", tipo_dia="TODOS",):
+def calcular_demanda_diaria(
+    df, anio, mes=None, transporte="TODOS", tipo_dia="TODOS"
+):
     '''Devuelve la evolución diaria del periodo seleccionado.'''
 
     datos = aplicar_filtros(df, anio, mes, tipo_dia)

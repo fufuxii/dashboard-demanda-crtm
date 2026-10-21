@@ -1,5 +1,7 @@
 import streamlit as st
 
+FUENTE = "Montserrat, sans-serif"
+
 FONDO = "#FFFFFF"
 FONDO_SECUNDARIO = "#F4F8FD"
 BORDE = "#CFDBEC"
@@ -16,7 +18,6 @@ ROJO_OSCURO = "#D8403F"
 ROJO = "#EE6A5B"
 ROJO_CLARO = "#FDE0DC"
 
-NARANJA_OSCURO = "#D9730D"
 NARANJA = "#F28C28"
 NARANJA_CLARO = "#FFE9D0"
 
@@ -40,12 +41,6 @@ COLORES_TRANSPORTE = {
     "TOTAL": LAVANDA,
 }
 
-COLORES_TIPO_DIA = {
-    "Laborables": AZUL_PASTEL,
-    "Fines de semana": LAVANDA,
-    "Festivos": NARANJA,
-}
-
 COLORES_PASTEL = [
     AZUL_PASTEL,
     VERDE_PASTEL,
@@ -54,78 +49,6 @@ COLORES_PASTEL = [
     ROJO_OSCURO,
     AMARILLO_PASTEL,
 ]
-
-FUENTE = "Montserrat, sans-serif"
-
-
-def aplicar_estilo_grafico(fig):
-    '''Aplica un estilo uniforme a los gráficos.'''
-
-    fig.update_layout(
-        template="plotly_white",
-        paper_bgcolor=FONDO,
-        plot_bgcolor=FONDO,
-        font=dict(family=FUENTE, color=TEXTO, size=13),
-        title=dict(
-            font=dict(family=FUENTE, color=TITULO, size=18),
-            x=0,
-            xanchor="left",
-        ),
-        colorway=COLORES_PASTEL,
-        margin=dict(l=25, r=25, t=60, b=50),
-        legend_title_text="",
-        bargap=0.25,
-        hoverlabel=dict(
-            bgcolor=FONDO_SECUNDARIO,
-            font_color=TEXTO,
-            bordercolor=BORDE,
-            font_family=FUENTE,
-        ),
-    )
-
-    fig.update_xaxes(
-        showgrid=False,
-        linecolor=REJILLA,
-        tickfont=dict(color=TEXTO_SECUNDARIO),
-        title_font=dict(color=TEXTO_SECUNDARIO, size=12),
-    )
-
-    fig.update_yaxes(
-        gridcolor=REJILLA,
-        linecolor=FONDO,
-        tickfont=dict(color=TEXTO_SECUNDARIO),
-        title_font=dict(color=TEXTO_SECUNDARIO, size=12),
-        tickformat=",.0f",
-        rangemode="tozero",
-        zeroline=False,
-    )
-
-    return fig
-
-
-def generar_variables():
-    '''Devuelve las variables CSS construidas con la paleta.'''
-
-    return f"""
-        :root {{
-            --fondo: {FONDO};
-            --fondo-secundario: {FONDO_SECUNDARIO};
-            --texto: {TEXTO};
-            --texto-secundario: {TEXTO_SECUNDARIO};
-            --titulo: {TITULO};
-            --acento: {ACENTO};
-            --acento-claro: {ACENTO_CLARO};
-            --control: {AZUL_PASTEL};
-            --control-claro: {AZUL_CLARO};
-            --borde: {BORDE};
-            --azul: {AZUL_PASTEL};
-            --verde: {VERDE_PASTEL};
-            --naranja: {NARANJA};
-            --lavanda: {LAVANDA};
-            --rojo: {ROJO_OSCURO};
-        }}
-    """
-
 
 ESTILOS_BASE = """
     html,
@@ -139,14 +62,18 @@ ESTILOS_BASE = """
         color: var(--texto) !important;
     }
 
-    [data-testid="stMainBlockContainer"] {
-        max-width: 1400px;
-        margin: auto;
-        padding: 4rem 2rem 1.5rem;
-    }
-
     [data-testid="stVerticalBlock"] {
         gap: 0.75rem;
+    }
+
+    [data-testid="stHeader"] {
+       display: none;
+    }
+
+    [data-testid="stMainBlockContainer"] {
+       max-width: 1400px;
+       margin: auto;
+       padding: 0.8rem 0.8rem 0.8rem;
     }
 
     h1, h2, h3 {
@@ -175,7 +102,6 @@ ESTILOS_BASE = """
     }
 """
 
-
 ESTILOS_CABECERA = """
     .crtm-banner {
         background: var(--titulo);
@@ -201,7 +127,6 @@ ESTILOS_CABECERA = """
         margin: 0.25rem 0 0;
     }
 """
-
 
 ESTILOS_CONTROLES = """
     [data-testid="stVerticalBlockBorderWrapper"] {
@@ -308,7 +233,6 @@ ESTILOS_CONTROLES = """
     }
 """
 
-
 ESTILOS_RESULTADOS = """
     [data-testid="stMetric"] {
         background: var(--fondo-secundario) !important;
@@ -382,30 +306,96 @@ ESTILOS_RESULTADOS = """
         border-radius: 10px !important;
         overflow: hidden;
     }
-
-    [data-testid="stExpander"] {
-        background: var(--fondo-secundario) !important;
-        border: 1px solid var(--borde) !important;
-        border-radius: 8px !important;
-    }
 """
 
 
-ESTILOS_MOVIL = """
-    @media (max-width: 600px) {
-        [data-testid="stMainBlockContainer"] {
-            padding: 4rem 1rem 1rem;
-        }
+ESTILOS_PESTANAS = """
+       button[data-baseweb="tab"] p {
+           color: var(--texto-secundario) !important;
+           font-weight: 600 !important;
+       }
 
-        .crtm-banner {
-            padding: 1.1rem 1.25rem;
-        }
+       button[data-baseweb="tab"][aria-selected="true"] p {
+           color: var(--titulo) !important;
+       }
 
-        .crtm-banner h1 {
-            font-size: 1.4rem !important;
-        }
-    }
-"""
+       [data-baseweb="tab-highlight"] {
+           background-color: var(--rosa) !important;
+       }
+
+       [data-baseweb="tab-border"] {
+           background-color: var(--borde) !important;
+       }
+   """
+
+
+def aplicar_estilo_grafico(fig):
+    '''Aplica un estilo uniforme a los gráficos.'''
+
+    fig.update_layout(
+        template="plotly_white",
+        paper_bgcolor=FONDO,
+        plot_bgcolor=FONDO,
+        font=dict(family=FUENTE, color=TEXTO, size=13),
+        title=dict(
+            font=dict(family=FUENTE, color=TITULO, size=18),
+            x=0,
+            xanchor="left",
+        ),
+        colorway=COLORES_PASTEL,
+        margin=dict(l=25, r=25, t=60, b=50),
+        legend_title_text="",
+        bargap=0.25,
+        hoverlabel=dict(
+            bgcolor=FONDO_SECUNDARIO,
+            font_color=TEXTO,
+            bordercolor=BORDE,
+            font_family=FUENTE,
+        ),
+    )
+
+    fig.update_xaxes(
+        showgrid=False,
+        linecolor=REJILLA,
+        tickfont=dict(color=TEXTO_SECUNDARIO),
+        title_font=dict(color=TEXTO_SECUNDARIO, size=12),
+    )
+
+    fig.update_yaxes(
+        gridcolor=REJILLA,
+        linecolor=FONDO,
+        tickfont=dict(color=TEXTO_SECUNDARIO),
+        title_font=dict(color=TEXTO_SECUNDARIO, size=12),
+        tickformat=",.0f",
+        rangemode="tozero",
+        zeroline=False,
+    )
+
+    return fig
+
+
+def generar_variables():
+    '''Devuelve las variables CSS construidas con la paleta.'''
+
+    return f"""
+        :root {{
+            --fondo: {FONDO};
+            --fondo-secundario: {FONDO_SECUNDARIO};
+            --texto: {TEXTO};
+            --texto-secundario: {TEXTO_SECUNDARIO};
+            --titulo: {TITULO};
+            --acento: {ACENTO};
+            --acento-claro: {ACENTO_CLARO};
+            --control: {AZUL_PASTEL};
+            --control-claro: {AZUL_CLARO};
+            --borde: {BORDE};
+            --azul: {AZUL_PASTEL};
+            --verde: {VERDE_PASTEL};
+            --naranja: {NARANJA};
+            --lavanda: {LAVANDA};
+            --rojo: {ROJO_OSCURO};
+        }}
+    """
 
 
 def aplicar_estilo_interfaz():
@@ -423,7 +413,7 @@ def aplicar_estilo_interfaz():
         + ESTILOS_CABECERA
         + ESTILOS_CONTROLES
         + ESTILOS_RESULTADOS
-        + ESTILOS_MOVIL
+        + ESTILOS_PESTANAS
     )
 
     st.markdown(f"<style>{css}</style>", unsafe_allow_html=True)

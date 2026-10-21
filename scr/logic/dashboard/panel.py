@@ -1,6 +1,9 @@
+import pandas as pd
 import streamlit as st
 from scr.logic.dashboard.funciones_bd import obtener_datos_de_db2
 from scr.logic.dashboard.estilos import aplicar_estilo_interfaz
+from scr.logic.snapshots.generar_historial import guardar_historico
+from scr.logic.snapshots.consultar_historial import cargar_historico
 from scr.logic.dashboard.metricas import (
     preparar_datos,
     calcular_demanda_global,
@@ -14,7 +17,8 @@ from scr.logic.dashboard.elementos import (
     crear_grafico_demanda_por_transporte,
 )
 from scr.logic.dashboard.variables import (
-    MESES, TRANSPORTES, TIPOS_DIA, VISTAS, TIPOS_GRAFICO
+    MESES, TRANSPORTES, TIPOS_DIA, VISTAS, 
+    TIPOS_GRAFICO, GENERACIONES_RECIENTES,
 )
 
 
@@ -38,7 +42,7 @@ def mostrar_cabecera():
         <div class="crtm-banner">
             <h1>Demanda del transporte público de Madrid</h1>
             <p>
-                Análisis de la demanda por transporte de cada año (2023-2026).
+                Análisis de la demanda por transporte de cada año (2023-2026)
             </p>
         </div>
         """,
@@ -63,6 +67,13 @@ def cargar_datos():
         print("Tabla CALENDARIO cargada correctamente.")
 
     return preparar_datos(df_demanda, df_calendario)
+
+
+@st.cache_data(ttl=300, show_spinner="Leyendo el histórico de z/OS...")
+def cargar_historial():
+    '''Lee las últimas generaciones del GDG.'''
+
+    return cargar_historico(GENERACIONES_RECIENTES)
 
 
 def seleccionar_mes(df, anio, activo=True):
@@ -301,11 +312,8 @@ def mostrar_resultados(df, filtros):
         mostrar_tarjetas(df, df_grafico, filtros)
 
 
-def mostrar_panel():
-    '''Coordina la carga, los filtros y los resultados.'''
-
-    configurar_pagina()
-    mostrar_cabecera()
+def mostrar_dashboard():
+    '''Muestra los filtros y los resultados de la demanda.'''
 
     try:
         df = cargar_datos()
@@ -323,3 +331,141 @@ def mostrar_panel():
 
     except Exception as e:
         st.error(f"Error al cargar el dashboard: {e}")
+
+
+def lanzar_snapshot():
+    '''Ejecuta el JCL desde el proyecto y refresca el historial.'''
+
+    try:
+        with st.spinner("Ejecutando el JCL en z/OS..."):
+            guardar_historico()
+
+        cargar_historial.clear()
+        st.success("Nueva generación guardada en el GDG.")
+
+    except Exception as e:
+        st.error(f"No se pudo generar el snapshot: {e}")
+
+
+def mostrar_tarjetas_historial(df_historial):
+    '''Muestra el estado de la última generación del GDG.'''
+
+    ultima = df_historial["GENERACION"].iloc[-1]
+    datos = df_historial[df_historial["GENERACION"] == ultima]
+
+    fecha = datos["SNAPSHOT"].max()
+
+    tarjetas = [
+        (
+            "Último snapshot",
+            fecha.strftime("%d/%m/%Y") if pd.notna(fecha) else "-",
+            ultima,
+        ),
+    ]
+
+    for _, fila in datos.iterrows():
+        rango = (
+            f"{fila['FECHA_MIN']:%d/%m/%Y} - {fila['FECHA_MAX']:%d/%m/%Y}"
+            if pd.notna(fila["FECHA_MIN"]) and pd.notna(fila["FECHA_MAX"])
+            else None
+        )
+        tarjetas.append(
+            (f"Filas de {fila['TABLA']}", f"{fila['NUM_FILAS']:,.0f}", rango)
+        )
+
+    for columna, tarjeta in zip(st.columns(len(tarjetas)), tarjetas):
+        crear_tarjeta(columna, *tarjeta)
+
+
+def preparar_tabla_historial(df_historial):
+    '''Devuelve una fila por generación con los datos de cada tabla en columnas.'''
+
+    resultado = (
+        df_historial[["GENERACION", "SNAPSHOT"]]
+        .drop_duplicates(subset="GENERACION")
+    )
+
+    for tabla in df_historial["TABLA"].unique():
+        datos = df_historial.loc[
+            df_historial["TABLA"] == tabla,
+            ["GENERACION", "NUM_FILAS", "FECHA_MIN", "FECHA_MAX"],
+        ].rename(columns={
+            "NUM_FILAS": f"Filas {tabla}",
+            "FECHA_MIN": f"{tabla}: desde",
+            "FECHA_MAX": f"{tabla}: hasta",
+        })
+
+        resultado = resultado.merge(datos, on="GENERACION", how="left")
+
+    return resultado.sort_values("GENERACION", ascending=False)
+
+
+def mostrar_tabla_historial(df_historial):
+    '''Muestra una fila por generación, de la más reciente a la más antigua.'''
+
+    tabla = preparar_tabla_historial(df_historial)
+
+    columnas = {
+        "GENERACION": st.column_config.TextColumn("Generación"),
+        "SNAPSHOT": st.column_config.DateColumn(
+            "Snapshot", format="DD/MM/YYYY"
+        ),
+    }
+
+    for columna in tabla.columns[2:]:
+        if columna.startswith("Filas"):
+            columnas[columna] = st.column_config.NumberColumn(
+                columna, format="localized"
+            )
+        else:
+            columnas[columna] = st.column_config.DateColumn(
+                columna, format="DD/MM/YYYY"
+            )
+
+    st.dataframe(
+        tabla,
+        width="stretch",
+        hide_index=True,
+        column_config=columnas,
+    )
+
+
+def mostrar_historial():
+    '''Muestra las últimas generaciones del GDG creadas desde el JCL.'''
+
+    columna_texto, columna_boton = st.columns([4, 1], vertical_alignment="center")
+
+    columna_texto.caption(
+        f"Últimas {GENERACIONES_RECIENTES} generaciones guardadas en z/OS."
+    )
+
+    if columna_boton.button("Guardar nuevo snapshot", width="stretch"):
+        lanzar_snapshot()
+
+    try:
+        df_historial = cargar_historial()
+    except Exception as e:
+        st.error(f"No se pudo leer el histórico: {e}")
+        return
+
+    if df_historial.empty:
+        st.info("Todavía no hay generaciones en el GDG.")
+        return
+
+    mostrar_tarjetas_historial(df_historial)
+    mostrar_tabla_historial(df_historial)
+
+
+def mostrar_panel():
+    '''Coordina la página y sus pestañas.'''
+
+    configurar_pagina()
+    mostrar_cabecera()
+
+    pestana_dashboard, pestana_historial = st.tabs(["Dashboard", "Historial"])
+
+    with pestana_dashboard:
+        mostrar_dashboard()
+
+    with pestana_historial:
+        mostrar_historial()

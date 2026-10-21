@@ -135,33 +135,6 @@ def calcular_demanda_por_mes(df, anio, transporte="TODOS", tipo_dia="TODOS"):
     return resultado
 
 
-def calcular_picos_mensuales(df, anio, transporte="TODOS", tipo_dia="TODOS"):
-    """Calcula el máximo diario de cada mes."""
-
-    datos = aplicar_filtros(df, anio, tipo_dia=tipo_dia)
-    columna = obtener_transporte(transporte)
-
-    if datos.empty:
-        return pd.DataFrame(
-            columns=["MES_NUM", "MES_NOMBRE", "PICO_VIAJES", "FECHA_PICO"]
-        )
-
-    indices = datos.groupby("MES_NUM")[columna].idxmax()
-
-    resultado = datos.loc[
-        indices, ["MES_NUM", "MES_NOMBRE", "FECHA", columna]
-    ].copy()
-
-    resultado = resultado.rename(
-        columns={
-            columna: "PICO_VIAJES",
-            "FECHA": "FECHA_PICO",
-        }
-    )
-
-    return resultado.sort_values("MES_NUM").reset_index(drop=True)
-
-
 def calcular_demanda_por_transporte(df, anio, mes=None, tipo_dia="TODOS"):
     """Calcula el reparto de viajes entre los transportes."""
 
@@ -179,33 +152,6 @@ def calcular_demanda_por_transporte(df, anio, mes=None, tipo_dia="TODOS"):
             for transporte in transportes
         ],
     })
-
-    return resultado
-
-
-def calcular_demanda_por_tipo_dia(df, anio, mes=None, transporte="TODOS"):
-    """Compara la demanda entre festivos, fines de semana y laborables no festivos."""
-
-    datos = aplicar_filtros(df, anio, mes)
-    columna = obtener_transporte(transporte)
-
-    datos = datos.copy()
-
-    datos["TIPO_DIA"] = "Laborables"
-    datos.loc[
-        datos["ES_FIN_DE_SEMANA"] == "S",
-        "TIPO_DIA"
-    ] = "Fines de semana"
-    datos.loc[
-        datos["ES_FESTIVO"] == "S",
-        "TIPO_DIA"
-    ] = "Festivos"
-
-    resultado = (
-        datos.groupby("TIPO_DIA", as_index=False)[columna]
-        .sum()
-        .rename(columns={columna: "VIAJES"})
-    )
 
     return resultado
 

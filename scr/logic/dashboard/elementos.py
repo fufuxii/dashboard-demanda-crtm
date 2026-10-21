@@ -1,7 +1,6 @@
 import plotly.express as px
 from scr.logic.dashboard.estilos import (
     COLORES_TRANSPORTE,
-    NARANJA_OSCURO,
     ROJO_OSCURO,
     aplicar_estilo_grafico,
 )
@@ -56,33 +55,6 @@ def crear_grafico_demanda_mensual(df_mensual, anio, transporte="TODOS", tipo_gra
     fig.update_layout(
         xaxis_title="Mes",
         yaxis_title="Viajes acumulados",
-        height=ALTURA_GRAFICO,
-    )
-
-    return aplicar_estilo_grafico(fig)
-
-
-def crear_grafico_picos_mensuales(df_picos, anio):
-    '''Muestra el máximo diario registrado en cada mes.'''
-
-    fig = px.bar(
-        df_picos,
-        x="MES_NOMBRE",
-        y="PICO_VIAJES",
-        title=f"Pico de demanda diaria por mes - {anio}",
-        labels={
-            "MES_NOMBRE": "Mes",
-            "PICO_VIAJES": "Viajes",
-            "FECHA_PICO": "Fecha del pico",
-        },
-        hover_data=["FECHA_PICO"],
-        color_discrete_sequence=[NARANJA_OSCURO],
-        category_orders={"MES_NOMBRE": list(MESES.values())},
-    )
-
-    fig.update_layout(
-        xaxis_title="Mes",
-        yaxis_title="Máximo de viajes en un día",
         height=ALTURA_GRAFICO,
     )
 

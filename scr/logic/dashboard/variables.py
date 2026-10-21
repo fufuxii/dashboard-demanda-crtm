@@ -1,7 +1,6 @@
 ALTURA_GRAFICO = 320
-
+GENERACIONES_RECIENTES = 5
 VISTAS = ["Global", "Detalle mensual"]
-
 TIPOS_GRAFICO = ["Barras", "Líneas"]
 
 TIPOS_DIA = {

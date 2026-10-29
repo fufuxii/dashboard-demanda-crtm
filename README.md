@@ -17,9 +17,8 @@ Proyecto de desarrollo de un dashboard interactivo para analizar y visualizar la
 dashboard-demanda-crtm/
 ├── datos/                  # Datos y archivos de origen
 ├── scr/
-│   ├── api/                # Comunicación con APIs
-│   ├── dashboard/          # Interfaz del dashboard
-│   ├── database/           # Acceso a la base de datos
+│   ├── bd/                 # Conexión con DB2
+│   ├── etl/                # Obtener e insertar los datos
 │   └── logic/              # Lógica y visualizaciones
 ├── .env                    # Variables de entorno privadas
 ├── .gitignore
@@ -67,10 +66,6 @@ dashboard-demanda-crtm/
 Las credenciales y los datos de conexión deben almacenarse en variables de entorno.
 
 Los archivos `.env` y `.venv/` no deben subirse al repositorio de GitHub.
-
-## 🚀 Estado del proyecto
-
-Proyecto en desarrollo. Se está trabajando en el procesamiento de los datos, la integración con DB2 en z/OS y la creación de visualizaciones interactivas para analizar la demanda del transporte público.
 
 ---
 
